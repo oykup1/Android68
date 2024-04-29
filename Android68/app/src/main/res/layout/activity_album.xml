@@ -1,6 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.android68.AlbumActivity">
+
+    <TextView
+        android:id="@+id/albumName"
+        android:layout_width="182dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="left"
+        android:text="Name Of Album"
+        android:textColor="@android:color/holo_purple"
+        android:textSize="21sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/movePhotoBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/deletePhotoBtn"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="MovePhoto" />
+
+    <Button
+        android:id="@+id/deletePhotoBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="DeletePhoto" />
+
+
+    <Button
+    android:id="@+id/addPhotoBtn"
+    android:layout_width="wrap_content"
+    android:layout_height="40dp"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentBottom="true"
+    android:clickable="true"
+    android:focusable="true"
+    android:text="AddPhoto" />
+
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="182dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/movePhotoBtn"
+        android:layout_centerHorizontal="true"
+        android:text="For SlideShow: Click on a Photo to start from\nTo Delete/Move Photo: LongClick on it, and buttons will appear"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="15sp" />
+
+
+    <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/albumName"
+        android:layout_above="@+id/deletePhotoBtn"
+        android:columnWidth="120dp"
+        android:gravity="center"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth">
+    </GridView>
+
+</RelativeLayout>

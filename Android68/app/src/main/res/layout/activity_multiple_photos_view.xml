@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android68.MultiplePhotosViewActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="310dp"
+        android:layout_height="344dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="26dp"
+        android:layout_marginRight="25dp"
+        android:layout_toLeftOf="@id/nextBtn"
+        android:layout_toRightOf="@id/previousBtn"
+        android:contentDescription="Image" />
+
+    <Button
+        android:id="@+id/previousBtn"
+        android:layout_width="70dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="141dp"
+        android:background="@null"
+        android:text="Previous"
+        android:textSize="10sp" />
+
+    <Button
+        android:id="@+id/nextBtn"
+        android:layout_width="70dp"
+        android:layout_height="100dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="141dp"
+        android:background="@null"
+        android:text="Next"
+        android:textSize="10dp" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutForAddTag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageView">
+
+
+        <EditText
+            android:id="@+id/addTagV"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="Tag Value"
+            android:inputType="text"/>
+
+        <Button
+            android:id="@+id/addTagAsLocation"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@+id/addTagV"
+            android:text="Add Location Tag"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/addTagAsPerson"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@+id/addTagV"
+            android:layout_below="@+id/addTagAsLocation"
+            android:text="Add Person Tag"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/removeTagBtn"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_alignRight="@+id/addTagAsLocation"
+            android:layout_alignParentRight="true"
+            android:text="Delete Tag (click Tag then this Button"
+            android:textSize="10sp" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/tagsOfPhotoSlideshow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/relativeLayoutForAddTag"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/filename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/imageView"
+        android:layout_marginStart="126dp"
+        android:background="@android:color/background_light"
+        android:text="TextView"
+        android:visibility="invisible"
+        android:textColor="@android:color/background_dark" />
+
+</RelativeLayout>

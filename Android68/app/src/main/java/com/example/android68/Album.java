@@ -1,15 +1,18 @@
 package com.example.android68;
 
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Album implements Parcelable, Serializable {
+/**
+ * @author Ali Rehman
+ * @author Oyku Pul
+ */
+public class Album implements Serializable {
     private String albumName;
     private ArrayList<Photo> listOfPhotos;
     private int numOfPhotos;
     private int id;
+    private Photo currPhoto = null;
     public Album(String name) {
         this.albumName = name;
         this.listOfPhotos = new ArrayList<>();
@@ -38,11 +41,20 @@ public class Album implements Parcelable, Serializable {
     public ArrayList<Photo> getListOfPhotos() {
         return listOfPhotos;
     }
-    public void addPhoto(Photo photo) {
-        listOfPhotos.add(photo);
+    public void addPhoto(String filePath) {
+        Photo nP = new Photo(filePath);
+        listOfPhotos.add(nP);
         numOfPhotos++;
     }
-    public void removePhoto(Photo i) {
+    public void setCurrPhoto(Photo currPhoto)
+    {
+        this.currPhoto = currPhoto;
+    }
+    public Photo getCurrPhoto()
+    {
+        return currPhoto;
+    }
+    public void removePhoto(int i) {
         listOfPhotos.remove(i);
         numOfPhotos--;
     }

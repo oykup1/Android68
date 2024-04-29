@@ -1,7 +1,7 @@
 package com.example.android68;
 
+import android.content.Context;
 import android.os.Bundle;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,24 +16,54 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
+/**
+ * @author Ali Rehman
+ * @author Oyku Pul
+ */
 public class MainActivity extends AppCompatActivity {
     private ListView albumListView;
     private ArrayAdapter<Album> adapter;
     private ArrayList<Album> albumList;
     private Button createButton, deleteButton, openButton, renameButton, handleSearchButton;
     private int selectedAlbumIndex = -1;
+    public static ManageAlbums director = new ManageAlbums();
+    final Context context = this;
+    File albumFile = new File("albums.dat");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        try{
+            director = loadAlbumList(context);
+        }catch(ClassNotFoundException e) {
+            showAlert("DataError", "Unable to Load First try in MA");
+            e.printStackTrace();
+        }catch(IOException e){
+            showAlert("DataError", "Unable to Load First try in MA, second c");
+            e.printStackTrace();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Create file, since when app starts for first time, albums.dat dosn't exist
+        if(!albumFile.exists()) {
+            Context context = this;
+            File file = new File(context.getFilesDir(), "albums.dat");
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+
+            }
+        }
 
         // Initialize views
         albumListView = findViewById(R.id.albumListView);
@@ -48,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
         albumListView.setAdapter(adapter);
         // Initialize buttons to be disabled
         updateButtonStates(false);
+
         // load album list
-        loadAlbumList();
+        retrieveAlbumsList();
+
         // Set listeners
         albumListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -66,19 +98,19 @@ public class MainActivity extends AppCompatActivity {
 
         deleteButton.setOnClickListener(v -> {
             if (selectedAlbumIndex >= 0) {
-                deleteAlbum(albumList.get(selectedAlbumIndex));
+                deleteAlbum(albumList.get(selectedAlbumIndex), selectedAlbumIndex);
             }
             });
 
         openButton.setOnClickListener(v -> {
             if (selectedAlbumIndex >= 0) {
-                openAlbum(albumList.get(selectedAlbumIndex));
+                openAlbum(albumList.get(selectedAlbumIndex), selectedAlbumIndex);
             }
         });
 
         renameButton.setOnClickListener(v ->{
                     if (selectedAlbumIndex >= 0) {
-                        renameAlbum(albumList.get(selectedAlbumIndex));
+                        renameAlbum(albumList.get(selectedAlbumIndex), selectedAlbumIndex);
                     }
             });
 
@@ -87,8 +119,6 @@ public class MainActivity extends AppCompatActivity {
                         handleSearchButton();
 
             });
-
-
     }
 
 // Other methods
@@ -112,8 +142,16 @@ public class MainActivity extends AppCompatActivity {
                     if (!isAlbumExist(albumName)) {
                         Album newAlbum = new Album(albumName);
                         albumList.add(newAlbum);
+                        director.addAlbumToList(newAlbum);
                         adapter.notifyDataSetChanged();
-                        saveAlbumList();
+
+                        try{
+                            saveAlbumList(director, context);
+                        }catch (IOException e){
+                            showAlert("DataError", "Unable to Save seconds try in MA");
+                            e.printStackTrace();
+                        }
+                        retrieveAlbumsList();
                     } else {
                         showAlert("Error", "Album name already exists.");
                     }
@@ -132,11 +170,20 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void deleteAlbum(Album selectedAlbum) {
+    private void deleteAlbum(Album selectedAlbum, int sAI) {
         if (albumList.contains(selectedAlbum)) {
             albumList.remove(selectedAlbum);
+            director.removeAlbumFromList(sAI);
             adapter.notifyDataSetChanged();
-            saveAlbumList();
+
+            try{
+                saveAlbumList(director, context);
+            }catch (IOException e){
+                showAlert("DataError", "Unable to Save third try in MA");
+                e.printStackTrace();
+            }
+            retrieveAlbumsList();
+
             selectedAlbumIndex = -1;
             updateButtonStates(false); // Update button states to reflect no selection
         } else {
@@ -144,13 +191,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openAlbum(Album selectedAlbum) {
-        Intent intent = new Intent(this, AlbumActivity.class);
-        intent.putExtra("selectedAlbum", selectedAlbum);  // Add the bundle to the intent
+    private void openAlbum(Album selectedAlbum, int sAI) {
+        Album a = director.getListOfAlbums().get(sAI);
+        director.setCurrAlbum(a);
+
+        Intent intent = new Intent(MainActivity.this, AlbumActivity.class);
         startActivity(intent);
     }
 
-    private void renameAlbum(Album selectedAlbum) {
+    private void renameAlbum(Album selectedAlbum, int sAI) {
         // Create a dialog to prompt the user for a new album name
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Rename Album");
@@ -171,7 +220,15 @@ public class MainActivity extends AppCompatActivity {
                     if (!isAlbumExist(newName)) {
                         selectedAlbum.setAlbumName(newName);
                         adapter.notifyDataSetChanged();
-                        saveAlbumList();
+                        director.getListOfAlbums().get(sAI).setAlbumName(newName);
+
+                        try{
+                            saveAlbumList(director, context);
+                        }catch (IOException e){
+                            showAlert("DataError", "Unable to Save 4 try in MA");
+                            e.printStackTrace();
+                        }
+                        retrieveAlbumsList();
                     } else {
                         showAlert("Error", "An album with this name already exists. Please choose a different name.");
                     }
@@ -211,33 +268,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-    private void saveAlbumList() {
-        try {
-            FileOutputStream fos = openFileOutput("albums.dat", MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(albumList);
-            oos.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Could not save albums.");
-        }
-    }
-    private void loadAlbumList() {
-        try {
-            FileInputStream fis = openFileInput("albums.dat");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            ArrayList<Album> tempList = (ArrayList<Album>) ois.readObject();
-            ois.close();
-            fis.close();
-            albumList.clear(); // Clear the current list
-            albumList.addAll(tempList); // Add all loaded albums to the current list
-            adapter.notifyDataSetChanged();
-        } catch (FileNotFoundException e) {
-            albumList = new ArrayList<>(); // No data file found, create a new list
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            showAlert("Error", "Could not load albums.");
+    private void retrieveAlbumsList()
+    {
+        albumList.clear();
+        for(int i = 0; i < director.getListOfAlbums().size(); i++)
+        {
+            albumList.add(director.getListOfAlbums().get(i));
         }
     }
     private void showAlert(String title, String message) {
@@ -251,6 +287,19 @@ public class MainActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    public static void saveAlbumList(ManageAlbums data, Context c) throws IOException{
+        FileOutputStream fos = c.openFileOutput("albums.dat", Context.MODE_PRIVATE);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(data);
+    }
+    public static ManageAlbums loadAlbumList(Context c) throws IOException, ClassNotFoundException{
+        FileInputStream fis = c.openFileInput("albums.dat");
+        ObjectInputStream in = new ObjectInputStream(fis);
+        ManageAlbums data = (ManageAlbums) in.readObject();
+
+        return data;
     }
 
 }

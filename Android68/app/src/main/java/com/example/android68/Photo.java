@@ -1,43 +1,25 @@
 package com.example.android68;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-public class Photo implements Parcelable, Serializable {
+
+/**
+ * @author Ali Rehman
+ * @author Oyku Pul
+ */
+public class Photo implements Serializable {
     private String filePath;
-    private String caption;
-    private ArrayList<Tag> tags;
+    private String captionNameFile;
+    private ArrayList<String>  personTags, locationTags;
     private int id;
 
-
-    public Photo(int id, String filePath, String caption) {
+    public Photo(String filePath) {
         this.filePath = filePath;
-        this.caption = caption;
-        this.tags = new ArrayList<>();
-        this.id = id;
-
-    }
-    protected Photo(Parcel in) {
-        id = in.readInt();
-        filePath = in.readString();
-        caption = in.readString();
-        tags = in.createTypedArrayList(Tag.CREATOR);
+        this.captionNameFile = filePath.substring(filePath.lastIndexOf('/')+1);
+        this.personTags = new ArrayList<String>();
+        this.locationTags = new ArrayList<String>();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(filePath);
-        dest.writeString(caption);
-        dest.writeTypedList(tags);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
     // Getters and Setters
     public int getId() {
         return id;
@@ -54,23 +36,49 @@ public class Photo implements Parcelable, Serializable {
         this.filePath = filePath;
     }
 
-    public String getCaption() {
-        return caption;
+    public String getCaptionNameFile() {
+        return captionNameFile;
     }
 
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-    public ArrayList<Tag> getTags() {
-        return tags;
+    public ArrayList<String> getTags()
+    {
+        ArrayList<String> combinedTags = new ArrayList<String>();
+
+        for(int i = 0; i < this.getLocationTags().size(); i++)
+        {
+            String insert = this.getLocationTags().get(i);
+            combinedTags.add("Location: " + insert);
+        }
+        for(int i = 0; i < this.getPersonTags().size(); i++)
+        {
+            String insert = this.getPersonTags().get(i);
+            combinedTags.add("Person: " + insert);
+        }
+        return combinedTags;
     }
 
-    public void addTag(Tag tag) {
-        tags.add(tag);
+    public ArrayList<String> getLocationTags()
+    {
+        return locationTags;
+    }
+    public ArrayList<String> getPersonTags()
+    {
+        return personTags;
     }
 
+    public void addPTag(String personTag){
+        this.personTags.add(personTag.toLowerCase());
+    }
 
-    public void removeTag(Tag tag) {
-        tags.remove(tag);
+    public void deletePTag(String personTag){
+        this.personTags.remove(personTag.toLowerCase());
+    }
+
+    public void addLTag(String locationTag){
+        this.locationTags.add(locationTag.toLowerCase());
+    }
+
+    public void deleteLTag(String locationTag){
+        this.locationTags.remove(locationTag.toLowerCase());
     }
 }
