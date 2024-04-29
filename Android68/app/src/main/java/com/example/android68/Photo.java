@@ -81,4 +81,9 @@ public class Photo implements Serializable {
     public void deleteLTag(String locationTag){
         this.locationTags.remove(locationTag.toLowerCase());
     }
+
+    @Override
+    public int hashCode() {
+        return 17*11 + this.getFilePath().hashCode();
+    }
 }

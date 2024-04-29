@@ -44,10 +44,8 @@ public class MainActivity extends AppCompatActivity {
         try{
             director = loadAlbumList(context);
         }catch(ClassNotFoundException e) {
-            showAlert("DataError", "Unable to Load First try in MA");
             e.printStackTrace();
         }catch(IOException e){
-            showAlert("DataError", "Unable to Load First try in MA, second c");
             e.printStackTrace();
         }
 
@@ -148,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
                         try{
                             saveAlbumList(director, context);
                         }catch (IOException e){
-                            showAlert("DataError", "Unable to Save seconds try in MA");
                             e.printStackTrace();
                         }
                         retrieveAlbumsList();
@@ -179,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
             try{
                 saveAlbumList(director, context);
             }catch (IOException e){
-                showAlert("DataError", "Unable to Save third try in MA");
                 e.printStackTrace();
             }
             retrieveAlbumsList();
@@ -225,7 +221,6 @@ public class MainActivity extends AppCompatActivity {
                         try{
                             saveAlbumList(director, context);
                         }catch (IOException e){
-                            showAlert("DataError", "Unable to Save 4 try in MA");
                             e.printStackTrace();
                         }
                         retrieveAlbumsList();
@@ -253,7 +248,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleSearchButton() {
-        // Implement the search functionality
+        Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+        startActivity(intent);
     }
     private void updateButtonStates(boolean isEnabled) {
         openButton.setEnabled(isEnabled);

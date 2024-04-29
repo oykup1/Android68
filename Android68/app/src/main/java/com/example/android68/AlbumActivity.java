@@ -33,7 +33,7 @@ public class AlbumActivity extends AppCompatActivity {
 
     private Album currAlbum;
     private static ArrayList<Photo> listOfPhotosInAlbum = new ArrayList<Photo>();
-    private Button deletePhotoBtn, addPhotoBtn, movePhotoBtn;
+    private Button deletePhotoBtn, addPhotoBtn, movePhotoBtn, back;
     final Context c = this;
     private String id;
     GridView gridV;
@@ -49,7 +49,7 @@ public class AlbumActivity extends AppCompatActivity {
 
         TextView albumNameDisplay = (TextView) findViewById(R.id.albumName);
         albumNameDisplay.setText(MainActivity.director.getCurrntAlbum().getNameOfAlbum());
-
+        back = findViewById(R.id.back);
         retrievePhotosOfAlbum();
 
         gridV = (GridView) findViewById(R.id.gridView1);
@@ -92,6 +92,13 @@ public class AlbumActivity extends AppCompatActivity {
                 return true;
             }
         });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Finish the current activity and return to the previous one
+            }
+        });
+
 
         //transitioning to differnt activity for single photo view
         gridV.setOnItemClickListener(new AdapterView.OnItemClickListener(){

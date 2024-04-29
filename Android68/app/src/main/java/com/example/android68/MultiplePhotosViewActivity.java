@@ -30,7 +30,7 @@ public class MultiplePhotosViewActivity extends AppCompatActivity {
     final Context context = this;
     private int photoPos;
     private TextView nameOfFile, textForTag;
-    private Button previousBtn, nextBtn;
+    private Button previousBtn, nextBtn, back;
     private ArrayList<Photo> listOfPhotosInAlbum = new ArrayList<Photo>();
     private Album currentAlbum = null;
     private int currentIndex;
@@ -48,6 +48,7 @@ public class MultiplePhotosViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiple_photos_view);
+        back = findViewById(R.id.back);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -107,7 +108,12 @@ public class MultiplePhotosViewActivity extends AppCompatActivity {
                 addingTagAsPerson();
             }
         });
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Finish the current activity and return to the previous one
+            }
+        });
         removeTagBtn = (Button) findViewById(R.id.removeTagBtn);
         tagList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

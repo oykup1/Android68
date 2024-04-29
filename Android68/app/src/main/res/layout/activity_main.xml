@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+
     <ListView
         android:id="@+id/albumListView"
         android:layout_width="match_parent"

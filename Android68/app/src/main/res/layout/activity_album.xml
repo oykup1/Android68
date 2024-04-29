@@ -2,20 +2,28 @@
 
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.android68.AlbumActivity">
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/albumName"
         android:layout_width="182dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_gravity="left"
+        android:layout_marginLeft="134dp"
+        android:layout_marginTop="3dp"
         android:text="Name Of Album"
         android:textColor="@android:color/holo_purple"
         android:textSize="21sp"
@@ -66,13 +74,13 @@
     <GridView
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/albumName"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/deletePhotoBtn"
+        android:layout_below="@+id/albumName"
+        android:layout_marginTop="8dp"
         android:columnWidth="120dp"
         android:gravity="center"
         android:numColumns="auto_fit"
-        android:stretchMode="columnWidth">
-    </GridView>
+        android:stretchMode="columnWidth"></GridView>
 
 </RelativeLayout>
