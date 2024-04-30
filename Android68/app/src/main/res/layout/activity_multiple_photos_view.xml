@@ -104,7 +104,6 @@
         android:layout_marginStart="126dp"
         android:background="@android:color/background_light"
         android:text="TextView"
-        android:visibility="invisible"
         android:textColor="@android:color/background_dark" />
 
 </RelativeLayout>
